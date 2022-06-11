@@ -14,7 +14,6 @@ logo = """
       |  \/ K|                            _/ |                
       `------'                           |__/           
 """
-logo_counter = 0
 
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
@@ -35,24 +34,13 @@ def final_dec(player_hand, comp_hand):
     Computer\'s final hand: {comp_hand}, Final score: {sum(comp_hand)} \n'
 
 
-def deal_cards():
-    """Returns the initial hands of both the player and the computer"""
-
-    pc1, pc2 = r.choice(cards), r.choice(cards)
-    cc1, cc2 = r.choice(cards), r.choice(cards)
-    p_cards = [pc1, pc2]
-    c_cards = [cc1, cc2]
-
-    return [p_cards, c_cards]
-
-
 def start_game():
     """Starts the initial black jack game"""
 
     answer = input('Would you like to play a game of Black Jack? Type "y" for Yes and "n" for No: ')
     if answer.upper() == 'Y':
         print(logo)
-        p_hand, c_hand = deal_cards()
+        p_hand, c_hand = ([r.choice(cards), r.choice(cards)], [r.choice(cards), r.choice(cards)])
         print(current_dec(p_hand, c_hand))
         card_q(p_hand, c_hand)
     elif answer.upper() == 'N':
@@ -67,7 +55,7 @@ def restart_game():
 
     answer = input('Would you like to play a game of Black Jack? Type "y" for Yes and "n" for No: ')
     if answer.upper() == 'Y':
-        p_hand, c_hand = deal_cards()
+        p_hand, c_hand = ([r.choice(cards), r.choice(cards)], [r.choice(cards), r.choice(cards)])
         print(current_dec(p_hand, c_hand))
         card_q(p_hand, c_hand)
     elif answer.upper() == 'N':
