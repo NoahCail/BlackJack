@@ -2,7 +2,9 @@
 
 # TODO: Add in functionality for doubling down and splitting on pairs & insurance on dealer aces
 # TODO: Add in functionality for there to be a player and a balance. Also can decide how much to bet each hand
+
 import random as r
+import money as m
 
 logo = """
 .------.            _     _            _    _            _    
@@ -34,20 +36,24 @@ def final_dec(player_hand, comp_hand):
     Computer\'s final hand: {comp_hand}, Final score: {sum(comp_hand)} \n'
 
 
-def start_game():
+def start_game(player):
     """Starts the initial black jack game"""
 
     answer = input('Would you like to play a game of Black Jack? Type "y" for Yes and "n" for No: ')
     if answer.upper() == 'Y':
-        print(logo)
-        p_hand, c_hand = ([r.choice(cards), r.choice(cards)], [r.choice(cards), r.choice(cards)])
-        print(current_dec(p_hand, c_hand))
-        card_q(p_hand, c_hand)
+        bet = input('How much would you like to wager?: ')
+        if bet > player.balance:
+            print(f'You don\'t that much in your balance. Please make a wager of {player.balance} or lower')
+            start_game(player)
+        else:
+            p_hand, c_hand = ([r.choice(cards), r.choice(cards)], [r.choice(cards), r.choice(cards)])
+            print(current_dec(p_hand, c_hand))
+            card_q(p_hand, c_hand, player, bet)
     elif answer.upper() == 'N':
         print('Then why did you start the program in the first place?')
     else:
         print('Isn\'t it so tough to type a y or an n, no but seriously figure it out')
-        restart_game()
+        start_game(player)
 
 
 def restart_game():
@@ -94,17 +100,18 @@ def dealer_q(player_hand, comp_hand):
         restart_game()
 
 
-def calculate_score(player_hand, comp_hand):
+def calculate_score(player_hand, comp_hand, bet):
     """Calculates the players score to see if they have gone over 21 and lost"""
 
     if sum(player_hand) > 21:
         if 11 in player_hand:
             x = player_hand.index(11)
             player_hand[x] = 1
-            calculate_score(player_hand, comp_hand)
+            calculate_score(player_hand, comp_hand, bet)
         else:
             print('You went over 21 and lost')
-            print(final_dec(player_hand, comp_hand))
+            print(final_dec(player_hand, comp_hand, bet))
+
             restart_game()
     elif player_hand == 21:
         print(current_dec(player_hand, comp_hand))
@@ -114,16 +121,16 @@ def calculate_score(player_hand, comp_hand):
         card_q(player_hand, comp_hand)
 
 
-def card_q(player_hand, comp_hand):
+def card_q(player_hand, comp_hand, bet):
     """Transitions the player into another question or the end of the game"""
 
     more_cards = input('Would you like to Hit or Stand? Type "Hit" or "Stand": ')
 
     if more_cards.upper() == 'HIT':
         player_hand.append(r.choice(cards))
-        calculate_score(player_hand, comp_hand)
+        calculate_score(player_hand, comp_hand, bet)
     elif more_cards.upper() == 'STAND':
-        dealer_q(player_hand, comp_hand)
+        dealer_q(player_hand, comp_hand, bet)
     else:
         print('Please enter "Hit" or "Stand"')
-        card_q(player_hand, comp_hand)
+        card_q(player_hand, comp_hand, bet)
