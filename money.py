@@ -13,7 +13,8 @@ class Player():
 
 def player_setup():
     name = input('What is your name?: ')
-    balance = input('What is your starting balance?: ')
+    balance = int(input('What is your starting balance?: '))
     player = Player(name, balance)
     # TODO: Stores the player info in the database
     return player
+
